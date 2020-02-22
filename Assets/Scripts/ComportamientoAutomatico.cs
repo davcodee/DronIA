@@ -21,8 +21,10 @@ public class ComportamientoAutomatico : MonoBehaviour {
 
 			case DronState.Iniciar:
             {
+					
 					actuador.Ascender();
-					currentState = DronState.Avanzar;
+					currentState = DronState.BuscarEsquina;
+					Debug.Log("Estado inicial ");
 					return;
             }
             // Estado de diambular falta el nivel de bateriía
@@ -30,11 +32,14 @@ public class ComportamientoAutomatico : MonoBehaviour {
 			{
 					if (sensor.Bateria() != 0)
 					{
+					
 						// Mientras nuestro dron no encuentre algo que avanze
 						if (!sensor.FrenteAPared())
-						{
+						{   
 							actuador.Adelante();
 						}else{
+							actuador.Detener();
+
 							currentState = DronState.Obstaculo;
 						}
 						
@@ -52,15 +57,14 @@ public class ComportamientoAutomatico : MonoBehaviour {
 					if (sensor.Bateria() != 0)
 					{
 
-						if (sensor.FrenteAPared())
+						if (sensor.FrenteAPared() && sensor.FrenteAParedDerecha() || sensor.FrenteAParedIzquierda())
 						{
+							Debug.Log("Estoy en el estado detener");
 							actuador.Detener();
-							actuador.GirarDerecha();
-
-						}
-						else {
-							currentState = DronState.Avanzar;
-						}
+						} else {
+						    actuador.Gira();
+						    currentState = DronState.Avanzar;
+                        }
 					}
 					else {
 						currentState = DronState.Cargando;
@@ -68,6 +72,7 @@ public class ComportamientoAutomatico : MonoBehaviour {
 
 					return;
             }
+
 
 			case DronState.Cargando:
             {
@@ -81,15 +86,4 @@ public class ComportamientoAutomatico : MonoBehaviour {
         }
 
 	}
-}
-
-/*
- * ENUMERACIÓN QUE MANEJA LOS ESTADOS DE NUESTRO DRON
- */
-public enum DronState
-{
-    Avanzar,
-    Iniciar,
-    Obstaculo,
-    Cargando
 }

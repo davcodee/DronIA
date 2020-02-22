@@ -48,7 +48,7 @@ public class Actuadores : MonoBehaviour
 
     public void Atras(){
         rb.AddRelativeForce(Vector3.back * movementForwardSpeed);
-        Detener();
+        
     }
 
     public void GirarDerecha(){
@@ -63,14 +63,21 @@ public class Actuadores : MonoBehaviour
         rb.rotation = Quaternion.Euler(0, 90f* transform.rotation.y, 0);
     }
 
+    public void Gira()
+    {
+        wantedYRotation += rotateAmountByKeys;
+        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
+        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, 90, rb.rotation.z));
+    }
+
+
     public void Derecha(){
         rb.AddRelativeForce(Vector3.right * sideMovementAmount);
-        Detener();
+       
     }
 
     public void Izquierda(){
         rb.AddRelativeForce(Vector3.left * sideMovementAmount);
-        Detener();
     }
 
     public void Detener(){
