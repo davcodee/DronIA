@@ -9,7 +9,7 @@ public class Actuadores : MonoBehaviour
     private Sensores sensor; // Componente adicional (script) para obtener información de los sensores
 
     private float upForce; // Indica la fuerza de elevación del dron
-    private float movementForwardSpeed = 200.0f; // Escalar para indicar fuerza de movimiento frontal
+    private float movementForwardSpeed = 250.0f; // Escalar para indicar fuerza de movimiento frontal
     private float wantedYRotation; // Auxiliar para el cálculo de rotación
     private float currentYRotation; // Auxiliar para el cálculo de rotación
     private float rotateAmountByKeys = 2.5f; // Auxiliar para el cálculo de rotación
@@ -48,7 +48,6 @@ public class Actuadores : MonoBehaviour
 
     public void Atras(){
         rb.AddRelativeForce(Vector3.back * movementForwardSpeed);
-        
     }
 
     public void GirarDerecha(){
@@ -56,24 +55,20 @@ public class Actuadores : MonoBehaviour
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
         rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, currentYRotation, rb.rotation.z));
     }
+	public void Gira(){
+	wantedYRotation += rotateAmountByKeys;
+        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
+        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, 90, rb.rotation.z));
+	}
 
     public void GirarIzquierda(){
         wantedYRotation -= rotateAmountByKeys;
-        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.1f);
-        rb.rotation = Quaternion.Euler(0, 90f* transform.rotation.y, 0);
-    }
-
-    public void Gira()
-    {
-        wantedYRotation += rotateAmountByKeys;
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
-        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, 90, rb.rotation.z));
+        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, currentYRotation, rb.rotation.z));
     }
-
 
     public void Derecha(){
         rb.AddRelativeForce(Vector3.right * sideMovementAmount);
-       
     }
 
     public void Izquierda(){

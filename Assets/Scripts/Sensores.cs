@@ -93,7 +93,7 @@ public class Sensores : MonoBehaviour
         return rayo.FrenteAPared();
     }
 
-    // MÉTODO QUE NOS DICE CUANDO ESTAMOS DEL LADO DERECHO DE UNA PARED.
+	// MÉTODO QUE NOS DICE CUANDO ESTAMOS DEL LADO DERECHO DE UNA PARED.
     public bool FrenteAParedDerecha() {
         return rayo.FrenteAparedDerecha();
     }
@@ -102,8 +102,6 @@ public class Sensores : MonoBehaviour
     public bool FrenteAParedIzquierda() {
         return rayo.FrenteAParedIzquierda();
     }
-
-
 
 
     public bool TocandoBasura(){

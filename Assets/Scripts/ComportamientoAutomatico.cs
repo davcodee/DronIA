@@ -6,17 +6,17 @@ public class ComportamientoAutomatico : MonoBehaviour {
 
 	private Sensores sensor;
 	private Actuadores actuador;
-    // Enumeración que maneja el estado en el cual se encuentra el dron.
-    private DronState currentState;
+	private float grado = 90;
+	private bool cercaPared = true;
+	private DronState currentState;
 
 	void Start(){
 		sensor = GetComponent<Sensores>();
 		actuador = GetComponent<Actuadores>();
 	}
-
+	
 	void FixedUpdate () {
-
-        switch (currentState)
+		switch (currentState)
         {
 
 			case DronState.Iniciar:
@@ -30,12 +30,14 @@ public class ComportamientoAutomatico : MonoBehaviour {
             // Estado de diambular falta el nivel de bateriía
 			case DronState.Avanzar:
 			{
+					
 					if (sensor.Bateria() != 0)
 					{
-					
+						
 						// Mientras nuestro dron no encuentre algo que avanze
 						if (!sensor.FrenteAPared())
 						{   
+							actuador.Flotar();
 							actuador.Adelante();
 						}else{
 							actuador.Detener();
@@ -84,6 +86,8 @@ public class ComportamientoAutomatico : MonoBehaviour {
 
 
         }
+
+	
 
 	}
 }

@@ -17,20 +17,21 @@ public class Rayo : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + (transform.forward * longitudDeRayo), Color.blue);
         Debug.DrawLine(transform.position, transform.position + (transform.right * longitudDeRayo), Color.red);
         Debug.DrawLine(transform.position, transform.position + ((transform.right * -1 ) * longitudDeRayo), Color.green);
+	//PARA SABER DONDE PONER SEMILLAS
+	Debug.DrawLine(transform.position, transform.position + ((transform.up * -1) * longitudDeRayo), Color.yellow);
     }
 
     void FixedUpdate(){
         // Similar a los métodos OnTrigger y OnCollision, se detectan colisiones con el rayo:
         frenteAPared = false;
-        frenteAParedDerecha = false;
+	frenteAParedDerecha = false;
         frenteAParedIzquierda = false;
-
 
         RaycastHit raycastHit;
         if(Physics.Raycast(transform.position, transform.forward, out raycastHit, longitudDeRayo))
             if(raycastHit.collider.gameObject.CompareTag("Pared"))
                 frenteAPared = true;
-        // CASO CUANDO TENEMOS UN OBJETO DEL LADO IZQUIERDO
+	// CASO CUANDO TENEMOS UN OBJETO DEL LADO IZQUIERDO
         if (Physics.Raycast(transform.position, (transform.right * -1), out raycastHit, longitudDeRayo)) {
             if (raycastHit.collider.gameObject.CompareTag("Pared"))
                 frenteAParedIzquierda = true;
@@ -40,17 +41,14 @@ public class Rayo : MonoBehaviour
         {
             if (raycastHit.collider.gameObject.CompareTag("Pared"))
                 frenteAParedIzquierda = true;
-        }
-
-
+	}
     }
 
     // Ejemplo de métodos públicos que podrán usar otros componentes (scripts):
     public bool FrenteAPared(){
         return frenteAPared;
     }
-
-    // METODO QUE NOS DICE SI HAY UNA PARED IZQUIERDA
+// METODO QUE NOS DICE SI HAY UNA PARED IZQUIERDA
     public bool FrenteAParedIzquierda(){
         return frenteAParedIzquierda;
     }
