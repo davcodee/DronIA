@@ -12,6 +12,7 @@ public enum DronState {
     Sembrar,
     Sembrado,
     Obstaculo,
-    Cargando
+    Cargando,
+Girar
 
 }

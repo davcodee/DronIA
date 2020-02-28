@@ -7,45 +7,44 @@ using UnityEngine;
 // Las comprobaciones y métodos son análogos al componente (script) de Sensores.
 public class Radar : MonoBehaviour
 {
-    private bool cercaDeBasura;
+    
     private bool cercaDePared;
+    private bool sembrado;
 
     void OnTriggerEnter(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            cercaDeBasura = true;
-        }
         if(other.gameObject.CompareTag("Pared")){
             cercaDePared = true;
+        }
+        if(other.gameObject.CompareTag("Semilla")){
+            Debug.Log("sembrado: true");
+            sembrado = true;
         }
     }
 
     void OnTriggerStay(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            cercaDeBasura = true;
-        }
         if(other.gameObject.CompareTag("Pared")){
             cercaDePared = true;
+        }
+        if(other.gameObject.CompareTag("Semilla")){
+            sembrado = true;
         }
     }
 
     void OnTriggerExit(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            cercaDeBasura = false;
-        }
         if(other.gameObject.CompareTag("Pared")){
             cercaDePared = false;
         }
-    }
-
-    public bool CercaDeBasura(){
-        return cercaDeBasura;
+        if(other.gameObject.CompareTag("Semilla")){
+            sembrado = false;
+        }
     }
 
     public bool CercaDePared(){
         return cercaDePared;
     }
 
-    public void setCercaDeBasura(bool value){
-        cercaDeBasura = value;
+    public bool Sembrado(){
+        return sembrado;
     }
+
 }

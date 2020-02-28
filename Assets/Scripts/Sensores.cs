@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,15 +8,14 @@ public class Sensores : MonoBehaviour
     private Rayo rayo; // Componente auxiliar (script) para utilizar rayo lineal
     private Bateria bateria; // Componente adicional (script) que representa la batería
     private Actuadores actuador; // Componente adicional (script) para obtener información de los ac
-    private GameObject basura; // Auxiliar para guardar referencia al objeto
+
     public GameObject estacionDeCarga;
 
     private bool tocandoPared; // Bandera auxiliar para mantener el estado en caso de tocar pared
     private bool cercaPared; // Bandera auxiliar para mantener el estado en caso de estar cerca de una pared
     private bool frentePared; // Bandera auxiliar para retomar el estado en caso de estar frente a una pared
-    private bool tocandoBasura; // Bandera auxiliar para mantener el estado en caso de tocar basura
-    private bool cercaBasura; // Bandera auxiliar para mantener el estado en caso de estar cerca de una basura
-
+    public bool zonaDeSembrado; // Bandera auxiliar para mantener el estado en caso de estar en una zona de sembrado
+    public bool semillaCentrada;
     // Asignaciones de componentes
     void Start(){
         radar = GameObject.Find("Radar").gameObject.GetComponent<Radar>();
@@ -27,8 +26,8 @@ public class Sensores : MonoBehaviour
 
     void Update(){
       cercaPared = radar.CercaDePared();
-      cercaBasura = radar.CercaDeBasura();
       frentePared = rayo.FrenteAPared();
+      zonaDeSembrado = rayo.ZonaDeSembrado();
     }
 
     // ========================================
@@ -57,26 +56,7 @@ public class Sensores : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            tocandoBasura = true;
-            basura = other.gameObject;
-        }
-    }
-
-    void OnTriggerStay(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            tocandoBasura = true;
-            basura = other.gameObject;
-        }
-    }
-
-    void OnTriggerExit(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            tocandoBasura = false;
-        }
-    }
-
+    
     // ========================================
     // Los siguientes métodos definidos son públicos, la intención
     // es que serán usados por otro componente (Controlador)
@@ -93,6 +73,14 @@ public class Sensores : MonoBehaviour
         return rayo.FrenteAPared();
     }
 
+    public bool Sembrar(){
+        return rayo.ZonaDeSembrado();
+    }
+
+    public bool Sembrado(){
+        return radar.Sembrado();
+    }
+
 	// MÉTODO QUE NOS DICE CUANDO ESTAMOS DEL LADO DERECHO DE UNA PARED.
     public bool FrenteAParedDerecha() {
         return rayo.FrenteAparedDerecha();
@@ -103,13 +91,8 @@ public class Sensores : MonoBehaviour
         return rayo.FrenteAParedIzquierda();
     }
 
-
-    public bool TocandoBasura(){
-        return tocandoBasura;
-    }
-
-    public bool CercaDeBasura(){
-        return radar.CercaDeBasura();
+    public bool ZonaDeSembrado(){
+        return zonaDeSembrado;
     }
 
     public float Bateria(){
@@ -118,19 +101,13 @@ public class Sensores : MonoBehaviour
 
     // Algunos otros métodos auxiliares que pueden ser de apoyo
 
-    public GameObject GetBasura(){
-        return basura;
-    }
 
     public Vector3 Ubicacion(){
         return transform.position;
     }
 
-    public void SetTocandoBasura(bool value){
-        tocandoBasura = value;
+    public void SetZonaDeSembrado(bool value){
+        zonaDeSembrado = value;
     }
 
-    public void SetCercaDeBasura(bool value){
-        radar.setCercaDeBasura(value);
-    }
 }

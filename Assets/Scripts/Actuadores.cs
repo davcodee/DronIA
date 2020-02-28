@@ -7,9 +7,10 @@ public class Actuadores : MonoBehaviour
     private Rigidbody rb; // Componente para simular acciones físicas realistas
     private Bateria bateria; // Componente adicional (script) que representa la batería
     private Sensores sensor; // Componente adicional (script) para obtener información de los sensores
+    public GameObject semilla;
 
     private float upForce; // Indica la fuerza de elevación del dron
-    private float movementForwardSpeed = 250.0f; // Escalar para indicar fuerza de movimiento frontal
+    private float movementForwardSpeed = 50.0f; // Escalar para indicar fuerza de movimiento frontal
     private float wantedYRotation; // Auxiliar para el cálculo de rotación
     private float currentYRotation; // Auxiliar para el cálculo de rotación
     private float rotateAmountByKeys = 2.5f; // Auxiliar para el cálculo de rotación
@@ -55,10 +56,10 @@ public class Actuadores : MonoBehaviour
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
         rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, currentYRotation, rb.rotation.z));
     }
-	public void Gira(){
+	public void Girar(){
 	wantedYRotation += rotateAmountByKeys;
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
-        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, 90, rb.rotation.z));
+        rb.rotation = Quaternion.Euler(new Vector3(0, 90,0));
 	}
 
     public void GirarIzquierda(){
@@ -80,13 +81,14 @@ public class Actuadores : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    public void Limpiar(GameObject basura){
-        basura.SetActive(false);
-        sensor.SetTocandoBasura(false);
-        sensor.SetCercaDeBasura(false);
+    public void Sembrar(){
+	   if(sensor.ZonaDeSembrado() && !sensor.Sembrado()){
+            Instantiate(semilla, new Vector3(transform.position.x,transform.position.y - 0.20f,transform.position.z), Quaternion.identity);
+       }
     }
 
     public void CargarBateria(){
         bateria.Cargar();
     }
+
 }

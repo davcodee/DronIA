@@ -2,92 +2,87 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Ejemplo de un comportamiento automático para el agente (basado en modelos)
 public class ComportamientoAutomatico : MonoBehaviour {
 
 	private Sensores sensor;
 	private Actuadores actuador;
-	private float grado = 90;
-	private bool cercaPared = true;
 	private DronState currentState;
+
 
 	void Start(){
 		sensor = GetComponent<Sensores>();
 		actuador = GetComponent<Actuadores>();
+		currentState = DronState.Iniciar;
 	}
-	
-	void FixedUpdate () {
-		switch (currentState)
-        {
-
+	void FixedUpdate() {
+		if(sensor.Bateria() <= 0){
+			currentState = DronState.Cargando;
+			return;
+		}
+		switch(currentState){
 			case DronState.Iniciar:
-            {
-					
-					actuador.Ascender();
-					currentState = DronState.BuscarEsquina;
-					Debug.Log("Estado inicial ");
-					return;
-            }
-            // Estado de diambular falta el nivel de bateriía
+			{
+			actuador.Ascender();
+			currentState = DronState.Avanzar;
+			break;
+			}
 			case DronState.Avanzar:
 			{
-					
-					if (sensor.Bateria() != 0)
-					{
-						
-						// Mientras nuestro dron no encuentre algo que avanze
-						if (!sensor.FrenteAPared())
-						{   
-							actuador.Flotar();
-							actuador.Adelante();
-						}else{
-							actuador.Detener();
-
-							currentState = DronState.Obstaculo;
-						}
-						
-					}else {
-						currentState = DronState.Cargando;
-                    }
-                    
-					return;
-                    // busca un c
-            }
-
-            //Nos va a decir 
+			if(sensor.ZonaDeSembrado()){
+				if(sensor.Sembrado()){
+					currentState = DronState.Sembrado;
+				} else {
+					actuador.Flotar();
+					actuador.Detener();
+					currentState = DronState.Sembrar;
+				}
+			}
+			if(sensor.FrenteAPared()){
+				actuador.Flotar();
+				actuador.Detener();
+				currentState = DronState.Obstaculo;
+			} else {
+				actuador.Flotar();
+				actuador.Adelante();
+			}
+			break;
+			}
+			case DronState.Sembrar:
+			{
+				actuador.Sembrar();
+				currentState = DronState.Sembrado;
+				break;
+			}
+			case DronState.Sembrado:
+			{
+				if(sensor.Sembrado()){
+					actuador.Flotar();
+					actuador.Adelante();
+				}
+				currentState = DronState.Avanzar;
+				break;
+			}
 			case DronState.Obstaculo:
-			{       // Mientras el dron este tocando pared gira hasta encontrar un camino
-					if (sensor.Bateria() != 0)
-					{
-
-						if (sensor.FrenteAPared() && sensor.FrenteAParedDerecha() || sensor.FrenteAParedIzquierda())
-						{
-							Debug.Log("Estoy en el estado detener");
-							actuador.Detener();
-						} else {
-						    actuador.Gira();
-						    currentState = DronState.Avanzar;
-                        }
-					}
-					else {
-						currentState = DronState.Cargando;
-                    }
-
-					return;
-            }
-
-
+			{
+			if(sensor.FrenteAPared()){
+			actuador.Flotar();
+			actuador.Detener();
+			} else {
+			currentState = DronState.Girar;
+			}
+			break;
+			}
+			case DronState.Girar:
+			{
+			actuador.Izquierda();
+			currentState = DronState.Avanzar;
+			break;
+			}
 			case DronState.Cargando:
-            {
-                    // falta la rutina  para ir a cargar
-					return;
-            }
-
-			
-
-
-        }
-
-	
-
+			{
+			break;
+			}
+		}
 	}
 }
