@@ -13,6 +13,7 @@ TagManager:
   - Surco largo
   - Obstaculo
   - ConSemilla
+  - ParedDeAbajo
   layers:
   - Default
   - TransparentFX

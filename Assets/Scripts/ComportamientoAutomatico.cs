@@ -8,12 +8,14 @@ public class ComportamientoAutomatico : MonoBehaviour {
 	private Sensores sensor;
 	private Actuadores actuador;
 	private DronState currentState;
+	private bool CambiandoParcela;
 
 
 	void Start(){
 		sensor = GetComponent<Sensores>();
 		actuador = GetComponent<Actuadores>();
 		currentState = DronState.Iniciar;
+		CambiandoParcela = false;
 	}
 	void FixedUpdate() {
 		if(sensor.Bateria() <= 0){
@@ -29,6 +31,21 @@ public class ComportamientoAutomatico : MonoBehaviour {
 			}
 			case DronState.Avanzar:
 			{
+			if(CambiandoParcela){
+				if(sensor.ZonaDeSembrado() && !sensor.Sembrado() && sensor.FrenteAParedAbajo()){
+					actuador.GirarDerecha90(90);
+					Debug.Log("GiroDerecha90");
+					CambiandoParcela = false;
+					currentState = DronState.Sembrar;
+				}
+				if(sensor.ZonaDeSembrado() && !sensor.Sembrado()){
+					actuador.GirarIzquierda90(90);
+					Debug.Log("GiroIzquierda90");
+					CambiandoParcela = false;
+					currentState = DronState.Sembrar;
+				}
+				actuador.Adelante();
+			}
 			if(sensor.ZonaDeSembrado()){
 				if(sensor.Sembrado()){
 					currentState = DronState.Sembrado;
@@ -38,10 +55,12 @@ public class ComportamientoAutomatico : MonoBehaviour {
 					currentState = DronState.Sembrar;
 				}
 			}
-			if(sensor.FrenteAPared()){
+			if(sensor.FrenteAPared() || sensor.FrenteAParedAbajo()){
 				actuador.Flotar();
 				actuador.Detener();
-				currentState = DronState.Obstaculo;
+				actuador.GirarIzquierda90(0);
+				Debug.Log("GiroIzquierda90");
+				currentState = DronState.CambiarParcela;
 			} else {
 				actuador.Flotar();
 				actuador.Adelante();
@@ -63,24 +82,22 @@ public class ComportamientoAutomatico : MonoBehaviour {
 				currentState = DronState.Avanzar;
 				break;
 			}
-			case DronState.Obstaculo:
+			case DronState.CambiarParcela:
 			{
-			if(sensor.FrenteAPared()){
-			actuador.Flotar();
-			actuador.Detener();
-			} else {
-			currentState = DronState.Girar;
-			}
-			break;
-			}
-			case DronState.Girar:
-			{
-			actuador.Izquierda();
-			currentState = DronState.Avanzar;
+				if(!sensor.ZonaDeSembrado() || sensor.Sembrado()){
+					CambiandoParcela = true;
+					currentState = DronState.Avanzar;
+					Debug.Log("Adelante");
+				}else{
+					actuador.Flotar();
+					actuador.Detener();
+					currentState = DronState.Avanzar;
+				}
 			break;
 			}
 			case DronState.Cargando:
 			{
+				actuador.VolverABase();
 			break;
 			}
 		}

@@ -11,6 +11,7 @@ public class Rayo : MonoBehaviour
     private bool frenteAPared;
     private bool frenteAParedIzquierda;
     private bool frenteAParedDerecha;
+    private bool frenteAParedAbajo;
     private bool zonaDeSembrado;
     private GameObject semilla;
 
@@ -28,16 +29,20 @@ public class Rayo : MonoBehaviour
         frenteAPared = false;
 	    frenteAParedDerecha = false;
         frenteAParedIzquierda = false;
+        frenteAParedAbajo = false;
 	    zonaDeSembrado = false;
 
         RaycastHit raycastHit;
-        if(Physics.Raycast(transform.position, transform.forward, out raycastHit, longitudDeRayo))
+        if(Physics.Raycast(transform.position, transform.forward, out raycastHit, longitudDeRayo)){
             if(raycastHit.collider.gameObject.CompareTag("Pared"))
                 frenteAPared = true;
+            if(raycastHit.collider.gameObject.CompareTag("ParedDeAbajo"))
+                frenteAPared = true;
+        }
 	   // CASO CUANDO TENEMOS UN OBJETO DEL LADO IZQUIERDO
         if (Physics.Raycast(transform.position, (transform.right * -1), out raycastHit, longitudDeRayo)) {
-            if (raycastHit.collider.gameObject.CompareTag("Pared"))
-                frenteAParedIzquierda = true;
+            if(raycastHit.collider.gameObject.CompareTag("ParedDeAbajo"))
+                frenteAParedAbajo = true;
         }
         // CASO CUANDO TENEMOS UN OBJETO DEL LADO DERECHO
         if (Physics.Raycast(transform.position, transform.right , out raycastHit, longitudDeRayo))
@@ -68,8 +73,13 @@ public class Rayo : MonoBehaviour
         return frenteAParedDerecha;
     }
 
+    public bool FrenteAParedAbajo(){
+        return frenteAParedAbajo;
+    }
+
     //MÉTODO QUE NOS DICE SI SE PUEDE SEMBRAR AHI.
     public bool ZonaDeSembrado(){
 	   return zonaDeSembrado;
     }
+
 }

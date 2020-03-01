@@ -16,6 +16,7 @@ public class Sensores : MonoBehaviour
     private bool frentePared; // Bandera auxiliar para retomar el estado en caso de estar frente a una pared
     public bool zonaDeSembrado; // Bandera auxiliar para mantener el estado en caso de estar en una zona de sembrado
     public bool semillaCentrada;
+    private bool frenteAParedAbajo;
     // Asignaciones de componentes
     void Start(){
         radar = GameObject.Find("Radar").gameObject.GetComponent<Radar>();
@@ -28,6 +29,7 @@ public class Sensores : MonoBehaviour
       cercaPared = radar.CercaDePared();
       frentePared = rayo.FrenteAPared();
       zonaDeSembrado = rayo.ZonaDeSembrado();
+      frenteAParedAbajo = rayo.FrenteAParedAbajo();
     }
 
     // ========================================
@@ -71,6 +73,10 @@ public class Sensores : MonoBehaviour
 
     public bool FrenteAPared(){
         return rayo.FrenteAPared();
+    }
+
+    public bool FrenteAParedAbajo(){
+        return rayo.FrenteAParedAbajo();
     }
 
     public bool Sembrar(){
