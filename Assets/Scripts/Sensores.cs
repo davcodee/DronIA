@@ -87,7 +87,7 @@ public class Sensores : MonoBehaviour
         return radar.Sembrado();
     }
 
-	// MÉTODO QUE NOS DICE CUANDO ESTAMOS DEL LADO DERECHO DE UNA PARED.
+    // MÉTODO QUE NOS DICE CUANDO ESTAMOS DEL LADO DERECHO DE UNA PARED.
     public bool FrenteAParedDerecha() {
         return rayo.FrenteAparedDerecha();
     }

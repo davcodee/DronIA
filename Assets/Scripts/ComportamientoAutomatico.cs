@@ -9,6 +9,7 @@ public class ComportamientoAutomatico : MonoBehaviour {
 	private Actuadores actuador;
 	private DronState currentState;
 	private bool CambiandoParcela;
+	public bool VueltaDerecha;
 
 
 	void Start(){
@@ -16,6 +17,7 @@ public class ComportamientoAutomatico : MonoBehaviour {
 		actuador = GetComponent<Actuadores>();
 		currentState = DronState.Iniciar;
 		CambiandoParcela = false;
+		VueltaDerecha = false;
 	}
 	void FixedUpdate() {
 		if(sensor.Bateria() <= 0){
@@ -32,18 +34,22 @@ public class ComportamientoAutomatico : MonoBehaviour {
 			case DronState.Avanzar:
 			{
 			if(CambiandoParcela){
-				if(sensor.ZonaDeSembrado() && !sensor.Sembrado() && sensor.FrenteAParedAbajo()){
+				if(sensor.ZonaDeSembrado() && !sensor.Sembrado()) {
+					Debug.Log("ZonaDeSembrado y no Sembrado");
+					if(VueltaDerecha){
 					actuador.GirarDerecha90(90);
 					Debug.Log("GiroDerecha90");
 					CambiandoParcela = false;
+					VueltaDerecha = false;
 					currentState = DronState.Sembrar;
-				}
-				if(sensor.ZonaDeSembrado() && !sensor.Sembrado()){
+					}else {
 					actuador.GirarIzquierda90(90);
 					Debug.Log("GiroIzquierda90");
 					CambiandoParcela = false;
 					currentState = DronState.Sembrar;
+					}
 				}
+				Debug.Log("CambiandoParcela: Adelante");
 				actuador.Adelante();
 			}
 			if(sensor.ZonaDeSembrado()){
@@ -55,13 +61,21 @@ public class ComportamientoAutomatico : MonoBehaviour {
 					currentState = DronState.Sembrar;
 				}
 			}
-			if(sensor.FrenteAPared() || sensor.FrenteAParedAbajo()){
+			if(sensor.FrenteAPared()){
 				actuador.Flotar();
 				actuador.Detener();
 				actuador.GirarIzquierda90(0);
-				Debug.Log("GiroIzquierda90");
+				Debug.Log("FrenteAPared");
 				currentState = DronState.CambiarParcela;
-			} else {
+			} else if(sensor.FrenteAParedAbajo()){
+				actuador.Flotar();
+				actuador.Detener();
+				actuador.GirarIzquierda90(0);
+				Debug.Log("FrenteAParedAbajo");
+				VueltaDerecha = true;
+				currentState = DronState.CambiarParcela;
+
+			}else{
 				actuador.Flotar();
 				actuador.Adelante();
 			}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6865787545597443725}
   m_Layer: 0
   m_Name: Surco chico
-  m_TagString: Surco chico
+  m_TagString: Surco
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

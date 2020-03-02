@@ -11,8 +11,9 @@ public enum DronState {
     BuscarEsquina,
     Sembrar,
     Sembrado,
-    CambiarParcela,
+    Obstaculo,
     Cargando,
-Girar
+	Girar,
+	CambiarParcela
 
 }

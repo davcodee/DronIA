@@ -16,6 +16,7 @@ public class Radar : MonoBehaviour
             cercaDePared = true;
         }
         if(other.gameObject.CompareTag("Semilla")){
+            
             sembrado = true;
         }
     }

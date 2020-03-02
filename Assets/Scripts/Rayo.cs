@@ -20,43 +20,43 @@ public class Rayo : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + (transform.forward * longitudDeRayo), Color.blue);
         Debug.DrawLine(transform.position, transform.position + (transform.right * longitudDeRayo), Color.red);
         Debug.DrawLine(transform.position, transform.position + ((transform.right * -1 ) * longitudDeRayo), Color.green);
-    	//PARA DETECTAR ZONAS DE SEMBRADO
-    	Debug.DrawLine(transform.position, transform.position + ((transform.up * -1 ) * longitudDeRayo), Color.yellow);
+        //PARA DETECTAR ZONAS DE SEMBRADO
+        Debug.DrawLine(transform.position, transform.position + ((transform.up * -1 ) * longitudDeRayo), Color.yellow);
     }
 
     void FixedUpdate(){
         // Similar a los métodos OnTrigger y OnCollision, se detectan colisiones con el rayo:
         frenteAPared = false;
-	    frenteAParedDerecha = false;
+        frenteAParedDerecha = false;
         frenteAParedIzquierda = false;
         frenteAParedAbajo = false;
-	    zonaDeSembrado = false;
+        zonaDeSembrado = false;
 
         RaycastHit raycastHit;
         if(Physics.Raycast(transform.position, transform.forward, out raycastHit, longitudDeRayo)){
             if(raycastHit.collider.gameObject.CompareTag("Pared"))
                 frenteAPared = true;
             if(raycastHit.collider.gameObject.CompareTag("ParedDeAbajo"))
-                frenteAPared = true;
-        }
-	   // CASO CUANDO TENEMOS UN OBJETO DEL LADO IZQUIERDO
-        if (Physics.Raycast(transform.position, (transform.right * -1), out raycastHit, longitudDeRayo)) {
-            if(raycastHit.collider.gameObject.CompareTag("ParedDeAbajo"))
                 frenteAParedAbajo = true;
+        }
+       // CASO CUANDO TENEMOS UN OBJETO DEL LADO IZQUIERDO
+        if (Physics.Raycast(transform.position, (transform.right * -1), out raycastHit, longitudDeRayo)) {
+            if(raycastHit.collider.gameObject.CompareTag("Pared"))
+                frenteAParedDerecha = true;
         }
         // CASO CUANDO TENEMOS UN OBJETO DEL LADO DERECHO
         if (Physics.Raycast(transform.position, transform.right , out raycastHit, longitudDeRayo))
         {
             if (raycastHit.collider.gameObject.CompareTag("Pared"))
                 frenteAParedIzquierda = true;
-	}
-    	// CASO CUANDO ESTEMOS ARRIBA DE UNA ZONA DE SEMBRADO
-    	if(Physics.Raycast(transform.position, (transform.up * -1), out raycastHit, longitudDeRayo)){
-    	    if(raycastHit.collider.gameObject.CompareTag("Agujero")){
+    }
+        // CASO CUANDO ESTEMOS ARRIBA DE UNA ZONA DE SEMBRADO
+        if(Physics.Raycast(transform.position, (transform.up * -1), out raycastHit, longitudDeRayo)){
+            if(raycastHit.collider.gameObject.CompareTag("Agujero")){
                 zonaDeSembrado = true;
             }
                     
-    	}
+        }
     }
 
     // Ejemplo de métodos públicos que podrán usar otros componentes (scripts):
@@ -79,7 +79,7 @@ public class Rayo : MonoBehaviour
 
     //MÉTODO QUE NOS DICE SI SE PUEDE SEMBRAR AHI.
     public bool ZonaDeSembrado(){
-	   return zonaDeSembrado;
+       return zonaDeSembrado;
     }
 
 }

@@ -58,11 +58,11 @@ public class Actuadores : MonoBehaviour
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
         rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, currentYRotation, rb.rotation.z));
     }
-	public void GirarIzquierda90(float grado){
-	    wantedYRotation += rotateAmountByKeys;
+    public void GirarIzquierda90(float grado){
+        wantedYRotation += rotateAmountByKeys;
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
         rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, gradoFijo - grado, rb.rotation.z));
-	}
+    }
 
     public void GirarDerecha90(float grado){
         wantedYRotation += rotateAmountByKeys;
@@ -90,7 +90,7 @@ public class Actuadores : MonoBehaviour
     }
 
     public void Sembrar(){
-	   if(sensor.ZonaDeSembrado() && !sensor.Sembrado()){
+       if(sensor.ZonaDeSembrado() && !sensor.Sembrado()){
             Instantiate(semilla, new Vector3(transform.position.x,transform.position.y - 0.20f,transform.position.z), Quaternion.identity);
        }
     }
