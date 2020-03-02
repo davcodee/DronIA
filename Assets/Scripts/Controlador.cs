@@ -7,6 +7,7 @@ public class Controlador : MonoBehaviour
     // Idealmente sólo se requiere de sensores y actuadores para programar el comportamiento
     private Actuadores actuador;
     private Sensores sensor;
+    private GameObject semilla;
 
     // Asignaciones de componentes
     void Start(){
@@ -47,16 +48,13 @@ public class Controlador : MonoBehaviour
         if(Input.GetAxis("Horizontal") < 0)
             actuador.Izquierda();
 
-
-        if(sensor.TocandoBasura()){
-            Debug.Log("Tocando basura!");
-            actuador.Limpiar(sensor.GetBasura());
+        if(sensor.ZonaDeSembrado()){
+            Debug.Log("Siembra aqui!");
+            actuador.Sembrar();
         }
         if(sensor.TocandoPared())
             Debug.Log("Tocando pared!");
 
-        if(sensor.CercaDeBasura())
-            Debug.Log("Cerca de una basura!");
         if(sensor.CercaDePared())
             Debug.Log("Cerca de una pared!");
 
@@ -68,5 +66,6 @@ public class Controlador : MonoBehaviour
             actuador.Detener();
         if(Input.GetKey(KeyCode.G))
             Debug.Log(sensor.Ubicacion());
+
     }
 }

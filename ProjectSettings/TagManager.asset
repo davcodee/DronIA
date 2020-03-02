@@ -4,9 +4,17 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Basura
   - Pared
   - BaseDeCarga
+  - Semilla
+  - Agujero
+  - Basura
+  - Surco chico
+  - Surco largo
+  - Obstaculo
+  - ConSemilla
+  - Surco
+  - ParedDeAbajo
   layers:
   - Default
   - TransparentFX

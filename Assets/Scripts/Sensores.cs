@@ -1,22 +1,24 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+* CLASE QUE MANEJA LOS SENSORES DE NUESTRO DRON
+*/
 public class Sensores : MonoBehaviour
 {
     private Radar radar; // Componente auxiliar (script) para utilizar radar esférico
     private Rayo rayo; // Componente auxiliar (script) para utilizar rayo lineal
     private Bateria bateria; // Componente adicional (script) que representa la batería
     private Actuadores actuador; // Componente adicional (script) para obtener información de los ac
-    private GameObject basura; // Auxiliar para guardar referencia al objeto
+
     public GameObject estacionDeCarga;
 
     private bool tocandoPared; // Bandera auxiliar para mantener el estado en caso de tocar pared
     private bool cercaPared; // Bandera auxiliar para mantener el estado en caso de estar cerca de una pared
     private bool frentePared; // Bandera auxiliar para retomar el estado en caso de estar frente a una pared
-    private bool tocandoBasura; // Bandera auxiliar para mantener el estado en caso de tocar basura
-    private bool cercaBasura; // Bandera auxiliar para mantener el estado en caso de estar cerca de una basura
-
+    public bool zonaDeSembrado; // Bandera auxiliar para mantener el estado en caso de estar en una zona de sembrado
+    public bool semillaCentrada;
+    private bool frenteAParedAbajo;
     // Asignaciones de componentes
     void Start(){
         radar = GameObject.Find("Radar").gameObject.GetComponent<Radar>();
@@ -27,8 +29,9 @@ public class Sensores : MonoBehaviour
 
     void Update(){
       cercaPared = radar.CercaDePared();
-      cercaBasura = radar.CercaDeBasura();
       frentePared = rayo.FrenteAPared();
+      zonaDeSembrado = rayo.ZonaDeSembrado();
+      frenteAParedAbajo = rayo.FrenteAParedAbajo();
     }
 
     // ========================================
@@ -57,40 +60,43 @@ public class Sensores : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            tocandoBasura = true;
-            basura = other.gameObject;
-        }
-    }
-
-    void OnTriggerStay(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            tocandoBasura = true;
-            basura = other.gameObject;
-        }
-    }
-
-    void OnTriggerExit(Collider other){
-        if(other.gameObject.CompareTag("Basura")){
-            tocandoBasura = false;
-        }
-    }
-
+    
     // ========================================
     // Los siguientes métodos definidos son públicos, la intención
     // es que serán usados por otro componente (Controlador)
 
+    /*
+    * FUNCION QUE NO DICE SI SE ESTA TOCANDO PARED
+    */
     public bool TocandoPared(){
         return tocandoPared;
     }
-
+    /*
+    * FUNCION QUE NOS DICE SI HAY UNA PARED CERCA
+    */
     public bool CercaDePared(){
         return radar.CercaDePared();
     }
 
     public bool FrenteAPared(){
         return rayo.FrenteAPared();
+    }
+    /*
+    * FUNCIÓN QUE NOS DICE SI HAY UN PARED  DEBAJO
+    */
+    public bool FrenteAParedAbajo(){
+        return rayo.FrenteAParedAbajo();
+    }
+
+    /*
+    * METODO PARA SABER SI ES ZONA DE SEMBRADO
+    */
+    public bool Sembrar(){
+        return rayo.ZonaDeSembrado();
+    }
+
+    public bool Sembrado(){
+        return radar.Sembrado();
     }
 
     // MÉTODO QUE NOS DICE CUANDO ESTAMOS DEL LADO DERECHO DE UNA PARED.
@@ -103,36 +109,34 @@ public class Sensores : MonoBehaviour
         return rayo.FrenteAParedIzquierda();
     }
 
-
-
-
-    public bool TocandoBasura(){
-        return tocandoBasura;
+    /*
+    * METODO QUE NOS DA LA ZONA DE SEMBRADO
+    */
+    public bool ZonaDeSembrado(){
+        return zonaDeSembrado;
     }
 
-    public bool CercaDeBasura(){
-        return radar.CercaDeBasura();
-    }
-
+    /*
+    * METODO QUE NO DA EL ESTADO DE LA BATERÍA
+    */
     public float Bateria(){
         return bateria.NivelDeBateria();
     }
 
     // Algunos otros métodos auxiliares que pueden ser de apoyo
 
-    public GameObject GetBasura(){
-        return basura;
-    }
-
+    /*
+    * METODO QUE NOS DA NUESTR UBICACION 
+    */
     public Vector3 Ubicacion(){
         return transform.position;
     }
 
-    public void SetTocandoBasura(bool value){
-        tocandoBasura = value;
+    /*
+    * METODO QUE COLOCA UNA ZONA DE SEMBRADO
+    */
+    public void SetZonaDeSembrado(bool value){
+        zonaDeSembrado = value;
     }
 
-    public void SetCercaDeBasura(bool value){
-        radar.setCercaDeBasura(value);
-    }
 }

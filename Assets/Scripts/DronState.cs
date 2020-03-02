@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +12,8 @@ public enum DronState {
     Sembrar,
     Sembrado,
     Obstaculo,
-    Cargando
+    Cargando,
+	Girar,
+	CambiarParcela
 
 }

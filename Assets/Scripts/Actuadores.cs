@@ -7,14 +7,17 @@ public class Actuadores : MonoBehaviour
     private Rigidbody rb; // Componente para simular acciones físicas realistas
     private Bateria bateria; // Componente adicional (script) que representa la batería
     private Sensores sensor; // Componente adicional (script) para obtener información de los sensores
+    public GameObject semilla;
+
 
     private float upForce; // Indica la fuerza de elevación del dron
-    private float movementForwardSpeed = 200.0f; // Escalar para indicar fuerza de movimiento frontal
+    private float movementForwardSpeed = 50.0f; // Escalar para indicar fuerza de movimiento frontal
     private float wantedYRotation; // Auxiliar para el cálculo de rotación
     private float currentYRotation; // Auxiliar para el cálculo de rotación
     private float rotateAmountByKeys = 2.5f; // Auxiliar para el cálculo de rotación
     private float rotationYVelocity; // Escalar (calculado) para indicar velocidad de rotación
     private float sideMovementAmount = 250.0f; // Escalar para indicar velocidad de movimiento lateral
+    private float gradoFijo = 270;
 
     // Asignaciones de componentes
     void Start(){
@@ -48,7 +51,6 @@ public class Actuadores : MonoBehaviour
 
     public void Atras(){
         rb.AddRelativeForce(Vector3.back * movementForwardSpeed);
-        
     }
 
     public void GirarDerecha(){
@@ -56,24 +58,26 @@ public class Actuadores : MonoBehaviour
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
         rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, currentYRotation, rb.rotation.z));
     }
+    public void GirarIzquierda90(float grado){
+        wantedYRotation += rotateAmountByKeys;
+        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
+        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, gradoFijo - grado, rb.rotation.z));
+    }
+
+    public void GirarDerecha90(float grado){
+        wantedYRotation += rotateAmountByKeys;
+        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
+        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, gradoFijo + grado, rb.rotation.z));
+    }
 
     public void GirarIzquierda(){
         wantedYRotation -= rotateAmountByKeys;
-        currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.1f);
-        rb.rotation = Quaternion.Euler(0, 90f* transform.rotation.y, 0);
-    }
-
-    public void Gira()
-    {
-        wantedYRotation += rotateAmountByKeys;
         currentYRotation = Mathf.SmoothDamp(currentYRotation, wantedYRotation, ref rotationYVelocity, 0.25f);
-        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, 90, rb.rotation.z));
+        rb.rotation = Quaternion.Euler(new Vector3(rb.rotation.x, currentYRotation, rb.rotation.z));
     }
-
 
     public void Derecha(){
         rb.AddRelativeForce(Vector3.right * sideMovementAmount);
-       
     }
 
     public void Izquierda(){
@@ -85,13 +89,22 @@ public class Actuadores : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    public void Limpiar(GameObject basura){
-        basura.SetActive(false);
-        sensor.SetTocandoBasura(false);
-        sensor.SetCercaDeBasura(false);
+    public void Sembrar(){
+       if(sensor.ZonaDeSembrado() && !sensor.Sembrado()){
+            Instantiate(semilla, new Vector3(transform.position.x,transform.position.y - 0.20f,transform.position.z), Quaternion.identity);
+       }
+    }
+
+    public void VolverABase(){
+        if (transform.position != GameObject.Find("BaseDeCarga").transform.position)
+        {
+            Vector3 pos = Vector3.MoveTowards(transform.position, GameObject.Find("BaseDeCarga").transform.position, 5 * Time.deltaTime);
+            GetComponent<Rigidbody>().MovePosition(pos);
+        }
     }
 
     public void CargarBateria(){
         bateria.Cargar();
     }
+
 }
