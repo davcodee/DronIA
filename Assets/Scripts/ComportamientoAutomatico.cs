@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Ejemplo de un comportamiento automático para el agente (basado en modelos)
+/*
+* CLASE QUE MANEJA EL COMPORTAMIENTO DEL DRON
+*/
 public class ComportamientoAutomatico : MonoBehaviour {
 
+	/* Sensores de nuestro Dron */
 	private Sensores sensor;
+	/* Actuadores de nuestro Dron*/
 	private Actuadores actuador;
+	/* Enumeración de los estados de nuestro dron*/
 	private DronState currentState;
+	/* Bandera que nos avisa sobre el cambio de parcela*/
 	private bool CambiandoParcela;
+	/*Bandera que nos guía al girar a la derecha*/
 	public bool VueltaDerecha;
 
 
@@ -19,18 +26,26 @@ public class ComportamientoAutomatico : MonoBehaviour {
 		CambiandoParcela = false;
 		VueltaDerecha = false;
 	}
+
 	void FixedUpdate() {
+		/* CASO CUANDO YA NO HAY BATERÍA*/
 		if(sensor.Bateria() <= 0){
 			currentState = DronState.Cargando;
 			return;
 		}
 		switch(currentState){
+			/*
+			* ESTADO INCIAL DE NUESTRO DRON
+			*/
 			case DronState.Iniciar:
 			{
 			actuador.Ascender();
 			currentState = DronState.Avanzar;
 			break;
 			}
+			/*
+			* ESTADADO AVANZAR DEL 
+			*/
 			case DronState.Avanzar:
 			{
 			if(CambiandoParcela){
@@ -87,6 +102,10 @@ public class ComportamientoAutomatico : MonoBehaviour {
 				currentState = DronState.Sembrado;
 				break;
 			}
+
+			/*
+			* ESTADO DE SIMBRA DEL DRON
+			*/
 			case DronState.Sembrado:
 			{
 				if(sensor.Sembrado()){
@@ -96,6 +115,9 @@ public class ComportamientoAutomatico : MonoBehaviour {
 				currentState = DronState.Avanzar;
 				break;
 			}
+			/*
+			* ESTADO EN EL CUAL SE VERIFICA SI LA PARCELA SE SEMBRO
+			*/
 			case DronState.CambiarParcela:
 			{
 				if(!sensor.ZonaDeSembrado() || sensor.Sembrado()){

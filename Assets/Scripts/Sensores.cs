@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
+* CLASE QUE MANEJA LOS SENSORES DE NUESTRO DRON
+*/
 public class Sensores : MonoBehaviour
 {
     private Radar radar; // Componente auxiliar (script) para utilizar radar esférico
@@ -63,10 +65,15 @@ public class Sensores : MonoBehaviour
     // Los siguientes métodos definidos son públicos, la intención
     // es que serán usados por otro componente (Controlador)
 
+    /*
+    * FUNCION QUE NO DICE SI SE ESTA TOCANDO PARED
+    */
     public bool TocandoPared(){
         return tocandoPared;
     }
-
+    /*
+    * FUNCION QUE NOS DICE SI HAY UNA PARED CERCA
+    */
     public bool CercaDePared(){
         return radar.CercaDePared();
     }
@@ -74,11 +81,16 @@ public class Sensores : MonoBehaviour
     public bool FrenteAPared(){
         return rayo.FrenteAPared();
     }
-
+    /*
+    * FUNCIÓN QUE NOS DICE SI HAY UN PARED  DEBAJO
+    */
     public bool FrenteAParedAbajo(){
         return rayo.FrenteAParedAbajo();
     }
 
+    /*
+    * METODO PARA SABER SI ES ZONA DE SEMBRADO
+    */
     public bool Sembrar(){
         return rayo.ZonaDeSembrado();
     }
@@ -97,21 +109,32 @@ public class Sensores : MonoBehaviour
         return rayo.FrenteAParedIzquierda();
     }
 
+    /*
+    * METODO QUE NOS DA LA ZONA DE SEMBRADO
+    */
     public bool ZonaDeSembrado(){
         return zonaDeSembrado;
     }
 
+    /*
+    * METODO QUE NO DA EL ESTADO DE LA BATERÍA
+    */
     public float Bateria(){
         return bateria.NivelDeBateria();
     }
 
     // Algunos otros métodos auxiliares que pueden ser de apoyo
 
-
+    /*
+    * METODO QUE NOS DA NUESTR UBICACION 
+    */
     public Vector3 Ubicacion(){
         return transform.position;
     }
 
+    /*
+    * METODO QUE COLOCA UNA ZONA DE SEMBRADO
+    */
     public void SetZonaDeSembrado(bool value){
         zonaDeSembrado = value;
     }
